@@ -28,18 +28,14 @@ def main():
             try:
                 num1 = float(input("Enter first number: "))
                 num2 = float(input("Enter second number: "))
-
+                os.system("cls")
                 if choice == '1':
-                    os.system("cls")
                     print(f"{num1} + {num2} = {add(num1, num2)}")
                 elif choice == '2':
-                    os.system("cls")
                     print(f"{num1} - {num2} = {subtract(num1, num2)}")
                 elif choice == '3':
-                    os.system("cls")
                     print(f"{num1} * {num2} = {multiply(num1, num2)}")
                 elif choice == '4':
-                    os.system("cls")
                     print(f"{num1} / {num2} = {divide(num1, num2)}")
             except ValueError as e:
                 os.system("cls")
@@ -47,6 +43,11 @@ def main():
                 print("Please try again.")
         else:
             print("Invalid input")
+#This function will write the history of the operations to a file
+def history(operation, num1, num2, result):
+    with open("history.txt", "a") as file:
+        file.write(f"{operation}: {num1} and {num2} = {result}\n")
+
 
 if __name__ == "__main__":
     while True:
