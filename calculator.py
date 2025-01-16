@@ -1,20 +1,39 @@
 import os
 #Every def is a function that performs a specific task
-def add(x, y):
-    return x + y
+class Operation:
+    def add(self, x, y):
+        return x + y
 
-def subtract(x, y):
-     return x - y
+    def subtract(self, x, y):
+        return x - y
 
-def multiply(x, y):
-    return x * y
+    def multiply(self, x, y):
+        return x * y
 
-def divide(x, y):
-    if y == 0:
-        raise ValueError("Cannot divide by zero!")
-    return x / y
-#This is the main function that will be called when the program is run
-def main():
+    def divide(self, x, y):
+        if y == 0:
+            raise ValueError("Cannot divide by zero!")
+        return x / y
+
+    def history(self, operation, num1, num2, result): # This function will write the history of the operations to a file
+        symbol = self.get_operation_symbol(operation)
+        with open("history.txt", "a") as file:
+            file.write(f"{num1} {symbol} {num2} = {result}\n")
+
+    def get_operation_symbol(self, choice): # This function will return the symbol of the operation
+        if choice == '1':
+            return '+'
+        elif choice == '2':
+            return '-'
+        elif choice == '3':
+            return '*'
+        elif choice == '4':
+            return '/'
+        else:
+            return ''
+
+def main(): # This is the main function that will be executed when the program is run
+    operation = Operation()
     while True:
         print("Select operation:")
         print("1. Add")
@@ -30,25 +49,24 @@ def main():
                 num2 = float(input("Enter second number: "))
                 os.system("cls")
                 if choice == '1':
-                    print(f"{num1} + {num2} = {add(num1, num2)}")
+                    result = operation.add(num1, num2)
                 elif choice == '2':
-                    print(f"{num1} - {num2} = {subtract(num1, num2)}")
+                    result = operation.subtract(num1, num2)
                 elif choice == '3':
-                    print(f"{num1} * {num2} = {multiply(num1, num2)}")
+                    result = operation.multiply(num1, num2)
                 elif choice == '4':
-                    print(f"{num1} / {num2} = {divide(num1, num2)}")
+                    result = operation.divide(num1, num2)
+
+                symbol = operation.get_operation_symbol(choice)
+                print(f"{num1} {symbol} {num2} = {result}")
+                operation.history(choice, num1, num2, result) # This will write the history of the operation to a file
             except ValueError as e:
-                os.system("cls")
                 print(e)
-                print("Please try again.")
         else:
             print("Invalid input")
-#This function will write the history of the operations to a file
-def history(operation, num1, num2, result):
-    with open("history.txt", "a") as file:
-        file.write(f"{operation}: {num1} and {num2} = {result}\n")
+        
 
-
+# This will run the main function when the program is run
 if __name__ == "__main__":
     while True:
         try:
