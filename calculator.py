@@ -16,10 +16,14 @@ class Operation:
             raise ValueError("Cannot divide by zero!")
         return x / y
 
-    def history(self, operation, num1, num2, result):  # This function will write the history of the operations to a file
+    def history(self, index, operation, num1, num2, result):  # This function will write the history of the operations to a file
         symbol = self.get_operation_symbol(operation)
         with open("history.txt", "a") as file:
             file.write(f"{num1} {symbol} {num2} = {result}\n")
+    
+    def delete_history() :
+        with open("history.txt", "w") as file:
+            pass
 
     def get_operation_symbol(self, choice):  # This function will return the symbol of the operation
         if choice == '1':
@@ -33,7 +37,7 @@ class Operation:
         else:
             return ''
 
-    def show_last_10_operations(self):  # This function displays the last 10 operations from the history file
+    def show_last_10_operations():  # This function displays the last 10 operations from the history file
         if os.path.exists("history.txt"):
             with open("history.txt", "r") as file:
                 lines = file.readlines()
@@ -42,6 +46,19 @@ class Operation:
                     print(line.strip())
         else:
             print("No history found.")
+    
+    def menu_history():
+        while True:
+            try:
+                choice = input("Choose 1 for print history, 2 for delete everything : ")
+                if choice =="1" :
+                    Operation.show_last_10_operations()
+                if choice =="2" :
+                    Operation.delete_history()
+            except KeyboardInterrupt :
+                os.system("cls")
+                print("Return to operation menu...")
+                break
 
 def exit_program():
     print("Exiting the program.")
@@ -64,7 +81,7 @@ def main():  # This is the main function that will be executed when the program 
             try:
                 num1 = float(input("Enter first number: "))
                 num2 = float(input("Enter second number: "))
-                os.system("cls" if os.name == "nt" else "clear")
+                os.system("cls")
                 if choice == '1':
                     result = operation.add(num1, num2)
                 elif choice == '2':
@@ -80,8 +97,8 @@ def main():  # This is the main function that will be executed when the program 
             except ValueError as e:
                 print(e)
         elif choice == '5':
-            os.system("cls" if os.name == "nt" else "clear")
-            operation.show_last_10_operations()
+                    os.system("cls")
+                    Operation.menu_history()
         elif choice == '6':
             exit_program()
         else:
