@@ -2,6 +2,7 @@ import os
 
 # Every def is a function that performs a specific task
 class Operation:
+
     def add(self, x, y):
         return x + y
 
@@ -12,18 +13,38 @@ class Operation:
         return x * y
 
     def divide(self, x, y):
-        if y == 0:
-            raise ValueError("Cannot divide by zero!")
         return x / y
 
-    def history(self, index, operation, num1, num2, result):  # This function will write the history of the operations to a file
+    def history(self, operation, num1, num2, result):
         symbol = self.get_operation_symbol(operation)
+        index = 1  # Par défaut, si le fichier est vide
+        if os.path.exists("history.txt"):
+            with open("history.txt", "r") as file:
+                lines = file.readlines()
+                index = len(lines) + 1  # Le prochain index est le nombre de lignes + 1
         with open("history.txt", "a") as file:
-            file.write(f"{num1} {symbol} {num2} = {result}\n")
-    
+            file.write(f"{index}. {num1} {symbol} {num2} = {result}\n")
+
+            
+    def delete_selected_history() :
+        index_to_delete = int(input("Enter the index of the history entry to delete: "))
+        if os.path.exists("history.txt"):
+            with open("history.txt", "r") as file:
+                lines = file.readlines()
+            with open("history.txt", "w") as file:
+                for line in lines:
+                    if not line.startswith(f"{index_to_delete}."):
+                        file.write(line)
     def delete_history() :
         with open("history.txt", "w") as file:
             pass
+    def delete_1line_history() :
+        with open("history.txt", "r") as file:
+            lines = file.readlines()
+            lines.pop()
+        with open("history.txt", "w") as file:
+            for line in lines:
+                file.write(line)
 
     def get_operation_symbol(self, choice):  # This function will return the symbol of the operation
         if choice == '1':
@@ -41,8 +62,8 @@ class Operation:
         if os.path.exists("history.txt"):
             with open("history.txt", "r") as file:
                 lines = file.readlines()
-                print("\nLast 10 operations:")
-                for line in lines[-10:]:
+                print("\nHistory:")
+                for line in lines:
                     print(line.strip())
         else:
             print("No history found.")
@@ -50,11 +71,15 @@ class Operation:
     def menu_history():
         while True:
             try:
-                choice = input("Choose 1 for print history, 2 for delete everything : ")
+                choice = input("Choose 1 for print history, 2 for delete everything, 3 for delete last line, 4 for delete selected line : ")
                 if choice =="1" :
                     Operation.show_last_10_operations()
                 if choice =="2" :
                     Operation.delete_history()
+                if choice =="3" :
+                    Operation.delete_1line_history()
+                if choice =="4" :
+                    Operation.delete_selected_history()
             except KeyboardInterrupt :
                 os.system("cls")
                 print("Return to operation menu...")
@@ -93,9 +118,11 @@ def main():  # This is the main function that will be executed when the program 
 
                 symbol = operation.get_operation_symbol(choice)
                 print(f"{num1} {symbol} {num2} = {result}")
-                operation.history(choice, num1, num2, result)  # This will write the history of the operation to a file
-            except ValueError as e:
-                print(e)
+                operation.history (choice, num1, num2, result)  # This will write the history of the operation to a file
+            except ValueError:
+                print("Can't convert string to number ")
+            except ZeroDivisionError:
+                print("Can't divide by zero")
         elif choice == '5':
                     os.system("cls")
                     Operation.menu_history()
